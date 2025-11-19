@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shopping Cart - Supermarket Management System</title>
+</head>
+<body>
+    <div>
+        <h1>Shopping Cart</h1>
+        
+  <% if (cart.length > 0) { %>
+  <div>
+    <h3>Cart ID: <%= cart[0].cartId %></h3>
+    <p>User ID: <%= cart[0].userId %></p>
+    <p>Total Amount: $<%= cart[0].totalAmount.toFixed(2) %></p>
+    <p>Last Updated: <%= new Date(cart[0].updatedAt).toLocaleString() %></p>
+
+    <h4>Items:</h4>
+    <ul>
+      <% cart[0].items.forEach(function(item) { %>
+        <li>
+          <strong>Product ID:</strong> <%= item.productId %><br>
+          <strong>Product Name:</strong> <%= item.productName %><br>
+          <strong>Quantity:</strong> <%= item.quantity %><br>
+          <strong>Unit Price:</strong> $<%= item.unitPrice.toFixed(2) %><br>
+          <strong>Image:</strong> <img src="<%= item.productImage %>" alt="<%= item.productName %>" style="width: 50px; height: auto;"><br>
+          
+          <strong>Added At:</strong> <%= new Date(item.addedAt).toLocaleString() %>
+        </li>
+        <hr>
+      <% }); %>
+    </ul>
+  </div>
+<% } else { %>
+  <p>Your cart is empty.</p>
+<% } %>
+
+    </div>
+</body>
+</html>
+

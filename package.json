@@ -1,0 +1,26 @@
+{
+    "name": "server",
+    "description": "EJS + MongoDB + Outh + RESTful express app",
+    "author": "Group 11",
+    "version": "0.0.1",
+    "dependencies": {
+        "bcryptjs": "^3.0.3",
+        "connect-mongo": "^5.1.0",
+        "dotenv": "^17.2.3",
+        "ejs": "*",
+        "express": "^5.1.0",
+        "express-formidable": "*",
+        "express-session": "^1.18.2",
+        "mongodb": "*",
+        "mongoose": "^8.20.0",
+        "nodemon": "*",
+        "passport": "^0.7.0",
+        "passport-facebook": "*",
+        "passport-google-oauth20": "^2.0.0",
+        "passport-local": "^1.0.0"
+    },
+    "engine": "node >= 18.0.0",
+    "scripts": {
+        "start": "node server"
+    }
+}
