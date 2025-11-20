@@ -164,7 +164,7 @@ img {
           </span>
         </div>
         
-        <% if (['staff', 'manager', 'storage'].includes(user.role)) { %>
+        <% if (user&&user?.role&&['staff', 'manager', 'storage'].includes(user.role)) { %>
           <a href="/find" class="btn btn-dashboard">📊 Dashboard</a>
         <% } %>
         
@@ -176,7 +176,7 @@ img {
   </nav>
     <div class='body'>
         <h1>Product Details</h1>
-                <% if (['staff', 'manager', 'storage'].includes(user.role)) { %>
+                <% if (user&&user?.role&&['staff', 'manager', 'storage'].includes(user.role)) { %>
         <a href="/">Home</a> | 
         <a href="/find">Back to List</a> | 
         <a href="/edit?_id=<%= product._id %>">Edit</a>
@@ -185,7 +185,7 @@ img {
 
         <div>
             <div>
-                <% if (product.productImage) { %>
+                <% if (product?.productImage) { %>
                     <img src="data:image/jpg;base64, <%= product.productImage %>" alt="<%= product.productName %>" width="300">
                 <% } else { %>
                     <div>No Product Image</div>
@@ -224,12 +224,12 @@ img {
                 </div>
 
                 <div>
-                        <% if (['staff', 'manager', 'storage'].includes(user.role)) { %>
+                        <% if (user&&user?.role&&['staff', 'manager', 'storage'].includes(user.role)) { %>
                     <a href="/edit?_id=<%= product._id %>">Edit Product</a>
                     <a href="/delete?_id=<%= product._id %>" onclick="return confirm('Are you sure you want to delete this product?')">Delete Product</a>
                     <% } %>
                     
-                      <% if (['end-user'].includes(user.role)) { %>
+                      <% if (user&&user?.role&&['end-user'].includes(user.role)) { %>
 <form action="/add-to-cart" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="userId" value="<%= user.userId %>">
     <input type="hidden" name="productId" value="<%= product.productId %>">
