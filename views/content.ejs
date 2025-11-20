@@ -190,7 +190,12 @@
   <!-- Navigation Bar -->
   <nav class="navbar">
     <div class="navbar-brand">
-     <a href='/shoppingcart' class="custom-link">🛒</a> Supermarket
+    <% if (['end-user'].includes(user.role)) { %>
+    <a href='/shoppingcart' class="custom-link">🛒</a><% }else{ %>🛒<% } %> 
+    Supermarket
+    <% if (['end-user'].includes(user.role)) { %>
+     <a href='/invoice' class="custom-link">Invoice</a>
+     <% } %>
     </div>
     
     <div class="navbar-actions">
