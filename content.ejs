@@ -190,10 +190,10 @@
   <!-- Navigation Bar -->
   <nav class="navbar">
     <div class="navbar-brand">
-    <% if (user&&['end-user'].includes(user.role)) { %>
+    <% if (user&&user?.role&&['end-user'].includes(user?.role)) { %>
     <a href='/shoppingcart' class="custom-link">🛒</a><% }else{ %>🛒<% } %> 
     Supermarket
-    <% if (user&&['end-user'].includes(user.role)) { %>
+    <% if (user&&user?.role&&['end-user'].includes(user?.role)) { %>
      <a href='/invoice' class="custom-link">Invoice</a>
      <% } %>
     </div>
@@ -210,7 +210,7 @@
           </span>
         </div>
         
-        <% if (['staff', 'manager', 'storage'].includes(user.role)) { %>
+        <% if (user&&user?.role&&['staff', 'manager', 'storage'].includes(user?.role)) { %>
           <a href="/find" class="btn btn-dashboard">📊 Dashboard</a>
         <% } %>
         
