@@ -219,8 +219,9 @@ hr {
         <input type="hidden" name="items[<%= index %>][unitPrice]" value="<%= item.unitPrice %>">
         <input type="hidden" name="items[<%= index %>][totalPrice]" value="<%= (item.unitPrice * item.quantity).toFixed(2) %>">
     <% }); %>
-    
-    <button type="submit" hidden="<%= cart[0]?.userId?.length > 20 %>" >Create Invoice</button>
+            <% if (user&&user?.role&&['end-user'].includes(user?.role)) { %>
+    <button type="submit" >Create Invoice</button>
+    <% } %>
 </form>
 <% } else { %>
   <p>Your cart is empty.</p>
