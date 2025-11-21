@@ -176,6 +176,23 @@
   display: block;
 }
 
+.btn-cart, .btn-invoice {
+    background-color: #8e4585; /* Use the same background as the navbar */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    text-decoration: none;
+    margin: 0 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 16px;
+}
+
+.btn-cart:hover, .btn-invoice:hover {
+    background-color: #7b3e7b; /* Darker shade on hover */
+}
+
 @media (max-width: 768px) {
   .navbar {
     flex-direction: column;
@@ -190,12 +207,10 @@
   <!-- Navigation Bar -->
   <nav class="navbar">
     <div class="navbar-brand">
-    <% if (user&&user?.role&&['end-user'].includes(user?.role)) { %>
+    <% if ((!user)||(user&&user?.role&&['end-user'].includes(user?.role))) { %>
     <a href='/shoppingcart' class="custom-link">🛒</a><% }else{ %>🛒<% } %> 
     Supermarket
-    <% if (user&&user?.role&&['end-user'].includes(user?.role)) { %>
-     <a href='/invoice' class="custom-link">Invoice</a>
-     <% } %>
+  
     </div>
     
     <div class="navbar-actions">
@@ -220,6 +235,15 @@
       <% } %>
     </div>
   </nav>
+  
+  <div style="text-align: center; margin-top: 20px;">
+    <% if ((!user)||(user && user?.role && ['end-user'].includes(user?.role))) { %>
+        <a href='/shoppingcart' class="btn-cart">🛒Shopping Cart</a>
+    <% } %>
+    <% if (user && user?.role && ['end-user'].includes(user?.role)) { %>
+        <a href='/invoice' class="btn-invoice">🧾Invoice</a>
+    <% } %>
+</div>
 
   <!-- Main Content -->
   <div class="container">

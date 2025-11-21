@@ -180,7 +180,7 @@ hr {
   <% if (cart.length > 0) { %>
   <div>
     <h3>Cart ID: <%= cart[0].cartId %></h3>
-    <p>User ID: <%= cart[0].userId %></p>
+    <p>User ID: <%= cart[0]?.userId?.length > 20 ? '(Please Login)': cart[0].userId %></p>
      <% 
     let total = 0; // Initialize total
     if (cart && cart.length > 0) { // Check if cart has items
@@ -220,7 +220,7 @@ hr {
         <input type="hidden" name="items[<%= index %>][totalPrice]" value="<%= (item.unitPrice * item.quantity).toFixed(2) %>">
     <% }); %>
     
-    <button type="submit">Create Invoice</button>
+    <button type="submit" hidden="<%= cart[0]?.userId?.length > 20 %>" >Create Invoice</button>
 </form>
 <% } else { %>
   <p>Your cart is empty.</p>

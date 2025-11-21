@@ -33,6 +33,8 @@ const client = new MongoClient(mongourl);
 const dbName = 'supermarket_db';
 const collectionName = "products";
 
+const t = (new Date()).toString() + Math.floor(Math.random() * 1000000);
+
 // ===== Mongoose Connection (for User authentication) =====
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log(' Mongoose connected successfully for authentication'))
@@ -346,10 +348,13 @@ async function syncUsersFromMongoDB() {
 
 app.get("/login", authController.showLoginPage);
 app.post("/login", authController.processLogin);
+
 app.get('/auth/google', passport.authenticate('google', { scope: ['email', 'profile'] }));
 app.get('/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/login', failureMessage: true }),
   authController.googleCallback);
+app.get('/signup', authController.showSignupPage);
+app.post('/signup', authController.processSignup);
 app.get("/logout", authController.logout);
 app.get('/auth/status', authController.checkAuthStatus);
 
@@ -505,23 +510,25 @@ const handle_Create_Invoice = async (req, res) => {
 
 const handle_Add_To_Cart = async (req, res) => {
     try {
-    if(!req.user){
-    res.redirect('/login');
-    }else{
+    
         await client.connect();
         console.log("Connected successfully to server");
         const db = client.db(dbName);
         const { userId, productId, quantity } = req.fields;
-        const doc = await db.collection('carts').findOne({ userId: userId });
+        let UserId = '';
+        if(userId == null || userId == ''){ 
+        UserId = t;
+        } else { 
+        UserId = userId;
+        }
+        const doc = await db.collection('carts').findOne({ userId: UserId });
         if(doc){
-        console.log('123\n\n\n\n\n\n\n\n\n123');
           handle_Update(req, res, 2);
         }else{
-        console.log('456\n\n\n\n\n\n\n\n\n456');
         let cartId = `Cart-${Date.now()}`;
         let cart = {
             cartId: cartId,
-            userId: userId,
+            userId: UserId,
             items: [{
 productId: productId, 
 quantity: Number(quantity),
@@ -532,7 +539,6 @@ addedAt: new Date()
 
         await insertDocument(db, cart, 'carts');
         res.redirect(`/`);
-        }
         }
     } catch (error) {
         console.error("Error creating invoice:", error);
@@ -604,7 +610,7 @@ const handle_Update = async (req, res, i = 1) => {
     const results = await updateDocument(db, DOCID, updateDoc);
     res.status(200).render('info', { message: `Updated ${results.modifiedCount} product(s)` });
     }else if(i==2){
-     const userId = req.user.userId;
+     const userId = req?.user?.userId || t;
      const productId = req.fields.productId;
      const quantityToAdd = parseInt(req.fields.quantity, 10);
      const cartDoc = await db.collection('carts').findOne({ userId });
@@ -712,6 +718,24 @@ app.get('/content', async (req, res) => {
       user: req.user || null,
       isAuthenticated: req.isAuthenticated()
     });
+      if(req?.user){
+  try{
+  
+    const userId = req.user.userId;
+    if (t && userId) {
+      const result = await db.collection('carts').updateMany(
+        { 
+        userId: t,
+        userId: { $ne: userId }
+        },
+        { $set: { userId: userId } }
+      );
+    }
+  }catch(error){
+    console.log("ERROR",error.message);//Error or userId already exists
+  }
+  }
+  
   } catch (error) {
     res.status(500).render('info', {
       message: `Error: ${error.message}`
@@ -721,10 +745,11 @@ app.get('/content', async (req, res) => {
 
 // Shopping Cart
 app.get('/shoppingcart', async (req, res) => {
-if(req.user==null){
+console.log(t);
+if(req.user==null&&1==2){
 	res.redirect('/login');
 }else{
-  const user = req.user;
+  const user = req?.user || { userId: t };
   try {
     await client.connect();
     console.log("Connected successfully to server");
@@ -817,7 +842,7 @@ app.post('/create-invoice', checkRole(['end-user']), isLoggedIn, (req, res) => {
     handle_Create_Invoice(req, res);
 });
 
-app.post('/add-to-cart', checkRole(['end-user']), isLoggedIn, (req, res) => {
+app.post('/add-to-cart', (req, res) => {
     handle_Add_To_Cart(req, res);
 });
 
@@ -829,6 +854,7 @@ app.get('/find', checkRole(['staff', 'manager', 'storage']), isLoggedIn, (req, r
 })
 
 app.get('/details', (req, res) => {
+console.log("session ===== ",req.session);
   handle_Details(res, req.query);
 })
 
