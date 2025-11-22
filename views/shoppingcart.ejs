@@ -223,6 +223,13 @@ hr {
     <button type="submit" >Create Invoice</button>
     <% } %>
 </form>
+
+  <form action="/delete-cart" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="userId" value="<%= cart[0].userId %>">
+        <input type="hidden" name="cartId" value="<%= cart[0].cartId %>">
+        <button type="submit" >Delete Cart</button>
+        </form>
+
 <% } else { %>
   <p>Your cart is empty.</p>
 <% } %>

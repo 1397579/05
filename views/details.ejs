@@ -233,7 +233,7 @@ img {
 <form action="/add-to-cart" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="userId" value="<%= user?.userId || null %>">
     <input type="hidden" name="productId" value="<%= product.productId %>">
-    Quantity: <input type="number" name="quantity" value="" min='1' max='100000'>
+    Quantity: <input type="number" name="quantity" value="" min='1' max='<%= product.stock %>'>
 <br />
     <button type="submit">Add To Cart</button>
 </form>

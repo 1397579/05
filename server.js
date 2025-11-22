@@ -508,6 +508,20 @@ const handle_Create_Invoice = async (req, res) => {
     }
 };
 
+const Handle_Delete_Cart = async (req, res) => {
+    try {
+        await client.connect();
+        console.log("Connected successfully to server");
+        const db = client.db(dbName);
+        const { userId, cartId } = req.fields;
+        await db.collection('carts').deleteOne({ userId: userId });
+        res.redirect(`/`);
+    } catch (error) {
+        console.error("Error", error);
+        res.status(500).render('info', { message: `Error: ${error.message}` });
+    }
+};
+
 const handle_Add_To_Cart = async (req, res) => {
     try {
     
@@ -841,6 +855,11 @@ app.post('/create', checkRole(['staff', 'manager', 'storage']), isLoggedIn, (req
 app.post('/create-invoice', checkRole(['end-user']), isLoggedIn, (req, res) => {
     handle_Create_Invoice(req, res);
 });
+
+app.post('/delete-cart', (req, res) => {
+    Handle_Delete_Cart(req, res);
+});
+
 
 app.post('/add-to-cart', (req, res) => {
     handle_Add_To_Cart(req, res);
